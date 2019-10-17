@@ -40,7 +40,7 @@ See graphs on following pages. Red points correspond to normal tissue while blue
 
 # Next Steps
 
-Combining multiple datasets would allow for a more robust test of the model to work across datasets, while also serving as a source of more training data. One approach would be to use one dataset as a training set, and a completely different training set as a test set. I have already identified a potential test set with the methylation profiles of urine from patients with and without urothelial carcinomas and corresponding cancerous tissue. I chose this dataset because the cancer types are closely related. 
+Combining multiple datasets would allow for a more robust test of the model to work across datasets, while also serving as a source of more training data. One approach would be to use one dataset as a training set, and a dataset from another institution or country as a test set. I have already identified a potential test set with the methylation profiles of urine from patients with and without urothelial carcinomas and corresponding cancerous tissue. I chose this dataset because the cancer type is the same as the one that I worked with for this deliverable. The big difference is that while the methylation profiles used for this deliverable were taken via biopsy, in this new dataset the methylation profiles were taken from the urine. This is important because if the SVM proves effective, it would mean that urothelial cancer detection is possible via urine sample, reducing the need for an invasive biopsy procedure.
 
 Look into Deep learning as an alternative to PCA. 
 
