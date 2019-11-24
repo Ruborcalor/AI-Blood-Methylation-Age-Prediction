@@ -24,8 +24,8 @@ def index():
     cgs += ["cg09809672", "cg22736354", "cg02228185", "cg01820374", "cg06493994", "cg19761273"]
     cgs = list(set(cgs))
 
-    np_valid_pred = np.load('/home/gautierk/McGill/202mais/app/app/y_valid_pred.npy')
-    np_valid_real = np.load('/home/gautierk/McGill/202mais/app/app/y_valid_real.npy')
+    np_valid_pred = np.load('./app/y_valid_pred.npy')
+    np_valid_real = np.load('./app/y_valid_real.npy')
 
     # Create a trace
     trace = go.Scatter(
@@ -58,7 +58,7 @@ def click_point():
         cgs += ["cg09809672", "cg22736354", "cg02228185", "cg01820374", "cg06493994", "cg19761273"]
         cgs = list(set(cgs))
 
-        np_x_test = np.load('/home/gautierk/McGill/202mais/app/app/X_test.npy')
+        np_x_test = np.load('./app/X_test.npy')
         print(np_x_test[request.json['pointNumber']])
         return json.dumps({
             'x': request.json["x"], 

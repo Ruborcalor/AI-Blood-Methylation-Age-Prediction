@@ -10,7 +10,8 @@ geometry: margin=3cm
 
 ### Age Prediction:
 
-![Go Power](./img/Comparing_Real_and_Predicted_Ages_by_Index-Training_Set.png "Work?")
+![Image](./img/website1.png "Work?")
+![Image](./img/website2.png "Work?")
 ![Image](./img/Comparing_Real_and_Predicted_Ages_by_Index-Validation_Set.png "Image")
 ![Image](./img/dataset_age_distribution.png "Image")
 ![Image](./img/heatmap16.png "Image")
