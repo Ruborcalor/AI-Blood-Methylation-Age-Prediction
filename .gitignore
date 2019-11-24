@@ -1,5 +1,4 @@
-hw/
-mais-202-coding-challenge-f2019/
+env/
 *.aux
 *.fdb_latexmk
 *.fls

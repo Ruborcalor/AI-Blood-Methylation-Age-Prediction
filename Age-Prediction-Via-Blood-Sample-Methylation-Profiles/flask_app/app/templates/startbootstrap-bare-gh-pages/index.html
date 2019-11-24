@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Cole Killian Mais 202 Final Project</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+        <!-- Bootstrap core CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Material Design Bootstrap -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/css/mdb.min.css" rel="stylesheet">
+
+        <!-- JQuery -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Bootstrap tooltips -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+        <!-- Bootstrap core JavaScript -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- MDB core JavaScript -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.11/js/mdb.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+        <!--<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>-->
+        <script src="https://d14fo0winaifog.cloudfront.net/plotly-basic.js"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+
+    </head>
+
+    <body>
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">Cole Killian Mais 202 Final Project</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!--<div class="collapse navbar-collapse" id="navbarResponsive">-->
+                    <!--<ul class="navbar-nav ml-auto">-->
+                        <!--<li class="nav-item active">-->
+                            <!--<a class="nav-link" href="#">Home-->
+                                <!--<span class="sr-only">(current)</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li class="nav-item">-->
+                            <!--<a class="nav-link" href="#">About</a>-->
+                        <!--</li>-->
+                        <!--<li class="nav-item">-->
+                            <!--<a class="nav-link" href="#">Services</a>-->
+                        <!--</li>-->
+                        <!--<li class="nav-item">-->
+                            <!--<a class="nav-link" href="#">Contact</a>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <!--<div id="tester" style="width:600px;height:250px;"></div>-->
+        <div class="container">
+            <div class="row">
+
+                <div id="chart" class="chart" style="width:90%;height:700px"> </div>
+
+                <div>
+                    <h1 id="real_age">Real Age: ?</h1>
+                    <h1 id="pred_age">Predicted Age: ?</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="slider_containers" style="width:50%">
+                    {% for cg in cgs %}
+                    <!--<label for="customRange2">{{cg}}</label>-->
+                    <div class="slider_holder">
+                        {{cg}} <input type="range" class="custom-range" min="0" max="1" step="0.01" id="{{cg}}" style="width:80%" oninput="toupdateHeat()" onchange="toupdateHeat()"> 
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="pred_real" style="width:50%">
+                    <div id="heatmap"></div>
+                </div>
+            </div>
+
+                <img src="/static/heatmap19.jpg" style="width:100%">
+        </div>
+
+        <!-- Bootstrap core JavaScript -->
+
+        <!--<script src="static/vendor/jquery/jquery.slim.min.js"></script>-->
+        <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    </body>
+
+
+    <script>
+      var model;
+        async function start() {
+            //arabic or english
+            //mode = cur_mode
+            
+            //load the model 
+            //model = await tf.loadLayersModel('model2/model.json')
+          console.log("loading tf model");
+            model = await tf.loadLayersModel('static/model/model.json')
+          console.log("loaded tf model");
+            
+            //warm up 
+            //model.predict(tf.zeros([1, 28, 28, 1]))
+            //
+            ////allow drawing on the canvas 
+            //allowDrawing()
+            
+            //load the class names
+            //await loadDict()
+        }
+    start();
+
+        //let cgs = [ "cg01820374", "cg05442902", "cg24450312", "cg22736354", "cg09809672", "cg19761273", "cg02085507", "cg17274064", "cg08370996", "cg06493994", "cg02228185", "cg03286783", "cg07158339", "cg04528819", "cg20692569", "cg27544190", "cg01511567", "cg04084157", "cg02479575"]
+
+        let cgs = ["cg02228185", "cg01511567", "cg02085507", "cg08370996", "cg04084157", "cg19761273", "cg17274064", "cg20692569", "cg24450312", "cg04528819", "cg06493994", "cg22736354", "cg01820374", "cg07158339", "cg27544190", "cg02479575", "cg03286783", "cg09809672", "cg05442902"]
+var myPlot = document.getElementById('chart');
+var graphs = {{plot | safe}};
+var layout = {
+  title: {
+    text:'Scatter Plot Predicted Age vs Predicted Age',
+    font: {
+      family: 'Courier New, monospace',
+      size: 24
+    },
+    xref: 'paper',
+  },
+  xaxis: {
+    title: {
+      text: 'Real Age',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    },
+  },
+  yaxis: {
+    title: {
+      text: 'Predicted Age',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    }
+  }
+};
+Plotly.plot('chart',graphs,layout);
+
+myPlot.on('plotly_click', function(data){
+    var pn='',
+        tn='',
+        colors=[];
+    for(var i=0; i < data.points.length; i++){
+        pn = data.points[i].pointNumber;
+        tn = data.points[i].curveNumber;
+        colors = data.points[i].data.marker.color;
+    };
+    for (let i = 0; i < colors.length; i++) {
+        colors[i] = 2;
+    }
+    colors[pn] = '#C54C82';
+
+    var update = {'marker':{color: colors, size:16}};
+    Plotly.restyle('chart', update, [tn]);
+    var pts = '';
+    var x = '';
+    var y = '';
+    var pointNumber = '';
+
+    for(var i=0; i < data.points.length; i++){
+        pts = '' + data.points[i].x + ' ' + data.points[i].y.toPrecision(4) + '';
+        x = data.points[i].x;
+        y = data.points[i].y.toPrecision(4);
+        pointNumber = data.points[i].pointNumber;
+    }
+    $("#real_age").html("Real Age: " + x);
+    $("#pred_age").html("Predicted Age: " + y);
+
+    $.ajax({
+        type : "POST",
+        url : '/click_point',
+        dataType: "json",
+        data: JSON.stringify({"x": x, "y": y, "pointNumber": pointNumber}),
+        contentType: 'application/json;charset=UTF-8',
+        success: function (data) {
+            console.log(data);
+            for (let i = 0; i < data.methyl.length; i++) {
+                $("#" + cgs[i]).val(data.methyl[i])
+            }
+            updateHeat();
+
+
+        }
+    });
+});
+
+function updateHeat() {
+    methyl_trans = []
+    for (let i = 0; i < cgs.length; i++) {
+        methyl_trans.unshift([$("#" + cgs[i]).val()])
+    }
+
+    //console.log(methyl_trans)
+    var heatmap_data = [
+        {
+            z: methyl_trans,
+            type: 'heatmap',
+            colorscale: 'Hot',
+        }
+    ];
+
+var layout = {
+  //title: {
+  //  text:'Heatmap of cg position methylation values',
+  //  font: {
+  //    family: 'Courier New, monospace',
+  //    size: 24
+  //  },
+  //  xref: 'paper',
+  //},
+  //yaxis: {
+  //  title: {
+  //    text: 'cg position',
+  //    font: {
+  //      family: 'Courier New, monospace',
+  //      size: 18,
+  //      color: '#7f7f7f'
+  //    }
+  //  }
+  //},
+  height: 560,
+  margin: {
+      l: 0,
+      r: 0,
+      b: 0,
+      t: 0,
+      pad: 0
+  },
+  autosize: false
+};
+
+
+    Plotly.newPlot('heatmap', heatmap_data, layout);
+}
+
+updateHeat();
+
+function toupdateHeat() {
+    $("#real_age").html("Real Age: ?")
+
+    updateHeat();
+
+    let knobs = [];
+    for( let i = 0; i < cgs.length ; i++) {
+        knobs.push(parseFloat($("#" + cgs[i]).val()));
+    }
+                console.log(knobs);
+
+
+    let a = tf.tensor(knobs);
+    const batched = a.expandDims(0)
+    // a = a.reshape([1, 19]);
+    console.log('shape:' + batched.shape);
+
+    console.log("predict")
+    const pred = model.predict(batched).dataSync()
+    console.log("Prediction" + pred)
+    $("#pred_age").html("Predicted Age: " + pred)
+
+    //$.ajax({
+    //    type : "POST",
+    //    url : '/model_predict',
+    //    dataType: "json",
+    //    data: JSON.stringify({"knobs": knobs}),
+    //    contentType: 'application/json;charset=UTF-8',
+    //    success: function (data) {
+    //        console.log(data);
+    //    }
+    //});
+
+}
+    </script>
+</html>
